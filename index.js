@@ -28,7 +28,7 @@ class NLBUDPFargateConstruct extends Construct {
     });
 
     const targetGroup = new elbv2.NetworkTargetGroup(this, 'NLBTargetGroup', {
-      targetGroupName: 'tgRadius',
+      targetGroupName: 'tgUDP',
       vpc: vpc,
       port: 1812,
       protocol: elbv2.Protocol.UDP,
@@ -50,7 +50,7 @@ class NLBUDPFargateConstruct extends Construct {
       defaultTargetGroups: [ targetGroup ]
     });
 
-    const taskDefinition = new ecs.FargateTaskDefinition(this, 'RadiusTaskDef',{
+    const taskDefinition = new ecs.FargateTaskDefinition(this, 'TaskDef',{
       serviceName: CONTAINER_NAME,
       cpu: 256,
       memoryMiB: 512,
@@ -69,13 +69,13 @@ class NLBUDPFargateConstruct extends Construct {
     });
 
     const fargateCluster = new ecs.Cluster(this, 'ECSCluster', {
-      clusterName: 'mfa-cluster',
+      clusterName: 'my-cluster',
       vpc: vpc,
       enableFargateCapacityProviders: true
     });
 
     const fargateService = new ecs.FargateService(this, 'FargateService', {
-      serviceName: 'radius-svc',
+      serviceName: 'my-svc',
       taskDefinition: taskDefinition,
       cluster: fargateCluster,
       minHealthyPercent: 0
